@@ -11,5 +11,7 @@ router.get('/articles', articleController.getArticles);
 router.get('/articles/:last?', articleController.getArticles);
 router.post('/save', articleController.save);
 router.get('/article/:id', articleController.getArticle);
+router.put('/article/:id', articleController.update);
+router.delete('/article/:id', articleController.delete);
 
 module.exports = router;

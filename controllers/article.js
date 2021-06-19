@@ -116,7 +116,7 @@ var controller = {
         }
 
         Article.findById(articleId, (error, article) => {
-            if(error || !article){
+            if(error){
                 return res.status(500).send({
                     status: 'error',
                     message: 'Error en el servidor'
@@ -135,6 +135,67 @@ var controller = {
                 article
             });
         });
+    },
+
+    update: (req, res) => {
+
+        var articleId = req.params.id;
+        var params = req.body;
+
+        if(!articleId || articleId== null){
+            return res.status(404).send({
+                status: 'error',
+                message: 'El articulo no existe'
+            });
+
+        }
+
+        try{
+
+            var validated_title = !validator.isEmpty(params.title);
+            var validated_content = !validator.isEmpty(params.content);
+
+        }catch(error){
+            return res.status(200).send({
+                status: 'error',
+                message: 'Faltan datos'
+            });
+        }
+
+        if(validated_title && validated_content){
+
+            Article.findOneAndUpdate({_id:articleId}, params, {new:true}, (error, articleUpdated)  => {
+
+                if(error){
+                    return res.status(500).send({
+                        status: 'error',
+                        message: 'Error en el servidor'
+                    });
+                }
+
+                if(!articleUpdated){
+                    return res.status(404).send({
+                        status: 'error',
+                        message: 'NO existe el articulo'
+                    });
+                }
+
+                return res.status(200).send({
+                    status: 'success',
+                    article: articleUpdated
+                });
+    
+            });
+        }else {
+            return res.status(200).send({
+                status: 'error',
+                message: 'Datos no son validos'
+            });
+        }
+    },
+
+    delete: (req, res) => {
+
     }
 
 
