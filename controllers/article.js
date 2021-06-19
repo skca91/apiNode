@@ -142,14 +142,6 @@ var controller = {
         var articleId = req.params.id;
         var params = req.body;
 
-        if(!articleId || articleId== null){
-            return res.status(404).send({
-                status: 'error',
-                message: 'El articulo no existe'
-            });
-
-        }
-
         try{
 
             var validated_title = !validator.isEmpty(params.title);
@@ -176,7 +168,7 @@ var controller = {
                 if(!articleUpdated){
                     return res.status(404).send({
                         status: 'error',
-                        message: 'NO existe el articulo'
+                        message: 'No existe el articulo'
                     });
                 }
 
@@ -196,6 +188,29 @@ var controller = {
 
     delete: (req, res) => {
 
+        var articleId = req.params.id;
+
+        Article.findOneAndDelete({_id: articleId}, (error, articleRemove) => {
+            
+            if(error){
+                return res.status(500).send({
+                    status: 'error',
+                    message: 'Error en el servidor'
+                });
+            }
+
+            if(!articleRemove){
+                return res.status(500).send({
+                    status: 'error',
+                    message: 'Articulo no existe'
+                });
+            }
+
+            return res.status(200).send({
+                status: 'success',
+                article: articleRemove
+            });
+        });
     }
 
 
