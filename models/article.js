@@ -1,10 +1,10 @@
 'use strict'
 
 var mongoose = require('mongoose');
-var schema = mongoose.schema;
+var Schema = mongoose.Schema;
 
 //Creo el esquema del articulo para el modelo
-var ArticleSchema = schema({
+var ArticleSchema = Schema({
     title: String,
     content: String,
     date: { type: Date, default: Date.now },
