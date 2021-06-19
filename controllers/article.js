@@ -12,6 +12,44 @@ var controller = {
         });
     },
 
+    //listar todos los articulos
+    getArticles: (req, res)=>{
+
+        var query = Article.find({});
+        var last = req.params.last;
+
+        if(last || last != undefined){
+            query.limit(2);
+        }
+
+        //lista todos los articulos de mas nuevo a mas viejo
+        query.sort('-_id').exec((error, articles) => {
+
+            if(error){
+                return res.status(500).send({
+                    status: 'error',
+                    message: 'Error al listar los articulos'
+                });
+            }
+
+            if(!articles){
+                return res.status(404).send({
+                    status: 'error',
+                    message: 'No hay articulos'
+                });
+            }
+
+            return res.status(200).send({
+                status: 'success',
+                articles
+            });
+
+        });
+       
+    },
+
+
+    //guardar un nuevo articulo
     save: (req, res) => {
 
         var params = req.body;
@@ -55,8 +93,6 @@ var controller = {
 
             });
 
-            
-
         }else{
             return res.status(200).send({
                 status: 'error',
@@ -64,6 +100,41 @@ var controller = {
             });
 
         } 
+    },
+
+    //mostrar un articulo
+    getArticle: (req, res) => {
+
+        var articleId = req.params.id;
+
+        if(!articleId || articleId== null){
+            return res.status(404).send({
+                status: 'error',
+                message: 'El articulo no existe'
+            });
+
+        }
+
+        Article.findById(articleId, (error, article) => {
+            if(error || !article){
+                return res.status(500).send({
+                    status: 'error',
+                    message: 'Error en el servidor'
+                });  
+            }
+
+            if(!article){
+                return res.status(404).send({
+                    status: 'error',
+                    message: 'El articulo no existe'
+                });  
+            }
+
+            return res.status(200).send({
+                status: 'success',
+                article
+            });
+        });
     }
 
 
