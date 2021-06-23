@@ -1,6 +1,9 @@
 'use strict'
 
 var validator = require('validator');
+var fs = require('fs');
+var path = require('path');
+
 var Article = require('../models/article');
 
 var controller = {
@@ -233,13 +236,31 @@ var controller = {
 
         if(fileExtension != 'png' && fileExtension != 'jpg' && fileExtension != 'jpeg' && fileExtension != 'gif'){
 
-        }else{
-            
-        }
+            //si no es borro el archivo
+            fs.unlink(filePath, (error) => {
+                return res.status(200).send({
+                    status: 'error',
+                    message: 'La extension no es la permitida'
+                });
+            });
 
-        return res.status(500).send({
-            fichero: req.files
-        });
+        }else{
+
+            var articleId = req.params.id;
+            Article.findOneAndUpdate({_id: articleId}, {image: fileName}, {new:true}, (error, articleUpdated) => {
+                if(error || !articleUpdated){
+                    return res.status(500).send({
+                        status: 'error',
+                        message: 'Error al actualizar el articulo'
+                    });
+                }
+
+                return res.status(200).send({
+                    status: 'success',
+                    article: articleUpdated
+                });
+            });
+        } 
     }
 
 
