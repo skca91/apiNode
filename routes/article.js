@@ -5,6 +5,9 @@ var articleController = require('../controllers/article');
 
 var router = express.Router();
 
+var multiparty = require('connect-multiparty');
+var middleware_upload = multiparty({ uploadDir: './upload/articles'});
+
 router.get('/', articleController.raiz);
 
 router.get('/articles', articleController.getArticles);
@@ -13,5 +16,6 @@ router.post('/save', articleController.save);
 router.get('/article/:id', articleController.getArticle);
 router.put('/article/:id', articleController.update);
 router.delete('/article/:id', articleController.delete);
+router.post('/upload-image/:id', middleware_upload, articleController.upload);
 
 module.exports = router;

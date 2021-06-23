@@ -211,6 +211,35 @@ var controller = {
                 article: articleRemove
             });
         });
+    },
+
+    upload: (req, res) => {
+
+        var fileName = 'Imagen no subida';
+
+        if(!req.files){
+            return res.status(404).send({
+                status: 'error',
+                message: fileName
+            });
+        }
+
+        var filePath = req.files.file0.path;
+        var fileSplit = filePath.split('\\');
+
+        var fileName = fileSplit[2];
+        var extensionSplit = fileName.split('\.');
+        var fileExtension = extensionSplit[1];
+
+        if(fileExtension != 'png' && fileExtension != 'jpg' && fileExtension != 'jpeg' && fileExtension != 'gif'){
+
+        }else{
+            
+        }
+
+        return res.status(500).send({
+            fichero: req.files
+        });
     }
 
 
