@@ -5,6 +5,7 @@ var fs = require('fs');
 var path = require('path');
 
 var Article = require('../models/article');
+const { exists } = require('../models/article');
 
 var controller = {
 
@@ -261,6 +262,25 @@ var controller = {
                 });
             });
         } 
+    },
+
+    getImage : (req, res) => {
+
+        var file = req.params.image;
+        var pathFile = './upload/articles/'+file;
+
+        fs.exists(pathFile, (exists) => {
+
+            if(exists){
+                return res.sendFile(path.resolve(pathFile));
+            }else{
+                return res.status(404).send({
+                    status: 'error',
+                    message: 'La imagen no existe'
+                });
+            }
+        });
+
     }
 
 
